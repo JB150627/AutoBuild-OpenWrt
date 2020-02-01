@@ -5,21 +5,21 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_Newifi_D2
+name: OpenWRT 
 
 on: 
   release:
     types: [published]
 
-  #push:
-  #  branches: 
-  #    - master
+  push:
+    branches: 
+      - master
 
   #schedule:
   #  - cron: 0 8 * * 5
   
-  #watch:
-  #  types: [started]
+  watch:
+    types: [started]
 
 jobs:
   build:
@@ -58,7 +58,7 @@ jobs:
         sudo -E apt-get clean
     - name: Clone source code
       env: 
-        REPO_URL: https://github.com/coolsnowwolf/lede
+        REPO_URL: https://github.com/openwrt/openwrt
         REPO_BRANCH: master
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
 
@@ -67,15 +67,22 @@ jobs:
       run: |
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        ./scripts/feeds install -a
-    - name: Configuration Customization - Build_Newifi_D2
+    - name: Configuration Customization
       env:
-        CONFIG_FILE: 'Newifi_D2.config'
+        CONFIG_FILE: '.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x ./customize.sh && ./customize.sh
         cd openwrt && make defconfig
-        
+    - name: SSH connection to Actions
+      uses: P3TERX/debugger-action@master     
+         
+    - name: Update & Install feeds
+      working-directory: ./openwrt
+      run: |
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+                
     - name: Download package
       working-directory: ./openwrt
       run: |
@@ -90,5 +97,5 @@ jobs:
     - name : Upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: OpenWrt
+        name: OpenWrt-Newifi_D2 [01.02.2020]
         path: openwrt/bin
