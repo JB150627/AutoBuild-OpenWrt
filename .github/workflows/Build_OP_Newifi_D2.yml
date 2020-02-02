@@ -1,8 +1,8 @@
 #=================================================
 # Description: Build OpenWrt using GitHub Actions
 # Lisence: MIT
-# Author: eSirPlayground
-# Youtube Channel: https://goo.gl/fvkdwm 
+# Author: eSirPlayground & P3TERX
+# Modified: Keith2002/JB150627 
 #=================================================
 
 name: OpenWRT 
@@ -97,5 +97,5 @@ jobs:
     - name : Upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: OpenWrt-Newifi_D2 [01.02.2020]
+        name: OpenWrt-Newifi_D2 [02.02.2020]
         path: openwrt/bin
